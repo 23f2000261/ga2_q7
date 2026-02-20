@@ -1,0 +1,28 @@
+name: Cache Dependencies
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Cache dependencies
+        id: cache-deps
+        uses: actions/cache@v4
+        with:
+          path: cached-deps
+          key: cache-f0de511
+
+      - name: Generate cache data
+        if: steps.cache-deps.outputs.cache-hit != 'true'
+        run: |
+          mkdir -p cached-deps
+          echo "cached data" > cached-deps/data.txt
+
+      - name: prime-cache-f0de511
+        run: echo "Cache hit ${{ steps.cache-deps.outputs.cache-hit }}"
